@@ -26,7 +26,8 @@
 
 int main(runMode_t mode)
 {
-   void* kernelImage = L"/g/zImage";  //"g" - internal memory | "e" - SD card
+   void* kernelImageNAND = L"/g/zImage";  //"g" - internal memory | "e" - SD card
+   void* kernelImageSD = L"/e/zImage";
    char* cmdlnRM = "bootmode=2 loglevel=4";
    char* cmdln = "loglevel=4";
    
@@ -45,39 +46,65 @@ int main(runMode_t mode)
    disp_FOTA_Printf("| Author:     mijoma         |");
    disp_FOTA_Printf("| Credits to: Rebellos       |");
    disp_FOTA_Printf("*----------------------------*");
-   disp_FOTA_Printf("");
-      
+
    //.... Your code here...
 
    __PfsNandInit();
    __PfsMassInit();
    MemoryCardMount();
-   tfs4_stat(kernelImage, &filestat);
+   disp_FOTA_Printf("| Mounted partitions         |");
+   tfs4_stat(kernelImageNAND, &filestat);
    kernelSize = filestat.st_size;
-   if ((fd=tfs4_open(kernelImage, 4)) >= 0)
+   if ((fd=tfs4_open(kernelImageNAND, 4)) >= 0)
    {
+      disp_FOTA_Printf("| Found a kernel on NAND     |");
       tfs4_read(fd, &KERNEL_BUF, kernelSize);
       tfs4_close(fd);
-   }   
-   
-
-   DisableMmuCache(mmuctrl);
+   } 
+   else
+   {
+      disp_FOTA_Printf("| Not found a kernel on NAND |");
+      disp_FOTA_Printf("| Trying to find it on SD    |");
+      if ((fd=tfs4_open(kernelImageSD, 4)) >= 0)
+	  {
+	    disp_FOTA_Printf("| Found a kernel on SD       |");
+		tfs4_read(fd, &KERNEL_BUF, kernelSize);
+        tfs4_close(fd);
+	  }
+	  else
+	  {
+	    disp_FOTA_Printf("| Not found a kernel on SD   |"); 
+        disp_FOTA_Printf("| Failed to boot             |"); 
+	  }
+   }
+	DisableMmuCache(mmuctrl);
+	disp_FOTA_Printf("| Disabled MMU               |");
    _CoDisableMmu();
    
    //DRV_Modem_BootingStart
    
    setup_core_tag(ATAG_buf);
+   disp_FOTA_Printf("| Setup ATAG                 |");
    setup_serial_tag(0x123, 0x456);
    setup_rev_tag('0');
    if (mode == rm_FOTA_RECOVERY)
+   {
       setup_cmdline_tag(cmdlnRM);
+	  disp_FOTA_Printf("| Boot into recovery mode    |");
+   }
    else
+   {
       setup_cmdline_tag(cmdln);
-	  DRV_Modem_BootingStart();
+	  disp_FOTA_Printf("| Boot into standard mode    |");
+   }   
+   DRV_Modem_BootingStart();
    setup_end_tag();
    
    //copy kernel to the right position
    memcpy(&KERNEL_START, &KERNEL_BUF, kernelSize);
+   disp_FOTA_Printf("| Copied kernel to boot      |");
+   disp_FOTA_Printf("| Wait!                      |");
+   disp_FOTA_Printf("*----------------------------*"); 
    
    //SYSCON operations
    *((unsigned int*)SYSCON_NORMAL_CFG) = 0xFFFFFFFF; 
@@ -88,6 +115,8 @@ int main(runMode_t mode)
    
    kernel = (fun_t)&KERNEL_START;
    kernel(0, 8500, ATAG_buf); //8500 - Wave I | 8530 - Wave II
+   //disp_FOTA_Printf("If you can read this");
+   //disp_FOTA_Printf("something went wrong");
    
    //loop forever
    while(1);
