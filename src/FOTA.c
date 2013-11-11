@@ -87,7 +87,7 @@ int main(runMode_t mode)
    _System_DisableFIQ();
    
    kernel = (fun_t)&KERNEL_START;
-   kernel(0, 0x891, ATAG_buf);
+   kernel(0, 8500, ATAG_buf); //8500 - Wave I | 8530 - Wave II
    
    //loop forever
    while(1);
