@@ -26,7 +26,7 @@
 
 int main(runMode_t mode)
 {
-   void* kernelImage = L"/g/zImage";
+   void* kernelImage = L"/g/zImage";  //"g" - internal memory | "e" - SD card
    char* cmdlnRM = "bootmode=2 loglevel=4";
    char* cmdln = "loglevel=4";
    
@@ -51,6 +51,7 @@ int main(runMode_t mode)
 
    __PfsNandInit();
    __PfsMassInit();
+   MemoryCardMount();
    tfs4_stat(kernelImage, &filestat);
    kernelSize = filestat.st_size;
    if ((fd=tfs4_open(kernelImage, 4)) >= 0)
