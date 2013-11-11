@@ -95,9 +95,10 @@ int main(runMode_t mode)
    else
    {
       setup_cmdline_tag(cmdln);
-	  disp_FOTA_Printf("| Boot into standard mode    |");
+	  disp_FOTA_Printf("| Boot into standard mode    |");	  
    }   
    DRV_Modem_BootingStart();
+   disp_FOTA_Printf("| Init modem                 |");   
    setup_end_tag();
    
    //copy kernel to the right position
