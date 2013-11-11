@@ -4,24 +4,17 @@ SrcDir := src
 
 SrcMake := src/Makefile
 
-ifdef SystemRoot
-	RM := del /Q
-	FixPath = $(subst /,\,$1)
-	SYS := WIN
-else
-	ifeq ($(shell uname), Linux)
-		RM := rm -f
-		FixPath = $1
-		SYS := LINUX
-	endif
-endif
+#Path to ARM toolchain (in this case is included in same folder as this file)
+ARM := ARM
 
-CC := $(CROSS_COMPILE)gcc
-AS := $(CROSS_COMPILE)as
-LD := $(CROSS_COMPILE)ld
-OBJCOPY := $(CROSS_COMPILE)objcopy
+CC := $(ARM)/bin/arm-bada-eabi-gcc.exe
+AS := $(ARM)/bin/arm-bada-eabi-as.exe
+LD := $(ARM)/bin/arm-bada-eabi-ld.exe
+RM := $(ARMTK)/bin/rm.exe
+OBJCOPY := $(ARM)/bin/arm-bada-eabi-objcopy.exe
 
-Applications := FBOOT_S8500_b1x FBOOT_S8530_b1x FBOOT_S8500_b2x FBOOT_S8530_b2x
+#Build only for Wave I (bada 2.0)
+Applications := FBOOT_S8500_b2x 
 OutputFiles := $(patsubst %, $(OutDir)/%.fota, $(Applications))
 
 application: $(OutputFiles)
