@@ -73,6 +73,7 @@ int main(runMode_t mode)
       setup_cmdline_tag(cmdlnRM);
    else
       setup_cmdline_tag(cmdln);
+	  DRV_Modem_BootingStart();
    setup_end_tag();
    
    //copy kernel to the right position
