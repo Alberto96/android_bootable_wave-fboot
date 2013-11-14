@@ -45,6 +45,9 @@ int main(runMode_t mode)
    disp_FOTA_Printf("*----------------------------*");
    disp_FOTA_Printf("| Author:     mijoma         |");
    disp_FOTA_Printf("| Credits to: Rebellos       |");
+   disp_FOTA_Printf("|             ihavenick      |");
+   disp_FOTA_Printf("|             Tigrouzen      |");
+   disp_FOTA_Printf("|             adis1313       |");
    disp_FOTA_Printf("*----------------------------*");
 
    //.... Your code here...
