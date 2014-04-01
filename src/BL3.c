@@ -86,15 +86,15 @@ int getBL3ptrs( void )
 runMode_t checkFBOOT( void )
 {
    KEYIFCOL = ((~(1 << 2) & (0xFF)) << 8); //COL 2
-   if((1 << 0) & (KEYIFROW & 0xFF)) //END KEY
-	   return rm_BL3;	   
+   if((1 << 0) & (KEYIFROW & 0xFF)) // END KEY
+	   return rm_BL3;  
 
    KEYIFCOL = ((~(1 << 1) & (0xFF)) << 8); //COL 1	   
-   if((1 << 2) & (KEYIFROW & 0xFF)) //CALL KEY
+   if((1 << 2) & (KEYIFROW & 0xFF)) // CALL + END KEYS
        return rm_FOTA_RUN;
-       
-   if((1 << 1) & (KEYIFROW & 0xFF))
-       return rm_FOTA_RECOVERY; //VOLUP KEY
+	   
+   if((1 << 1) & (KEYIFROW & 0xFF)) // VOLUP or LOCK + END + CALL KEYS
+       return rm_FOTA_RECOVERY;
 }
 
 void BL3_Shadowing( void )
