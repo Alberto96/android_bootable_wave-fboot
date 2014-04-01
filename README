@@ -1,0 +1,5 @@
+FOTA Bootloader Standard Edition:
+
+Power/End Call => Bada
+Answer Call + Power/End Call => Android SD/NAND Normal Mode
+Volume Up/Lock + Answer Call + Power/End Call => Android SD/NAND Recovery Mode
