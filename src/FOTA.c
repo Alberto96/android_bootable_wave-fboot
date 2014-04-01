@@ -43,11 +43,14 @@ int main(runMode_t mode)
    disp_FOTA_Printf("*----------------------------*");
    disp_FOTA_Printf("|      FOTA BOOTLOADER       |");
    disp_FOTA_Printf("*----------------------------*");
-   disp_FOTA_Printf("| Author:     mijoma         |");
-   disp_FOTA_Printf("| Credits to: Rebellos       |");
-   disp_FOTA_Printf("|             ihavenick      |");
-   disp_FOTA_Printf("|             Tigrouzen      |");
-   disp_FOTA_Printf("|             adis1313       |");
+   disp_FOTA_Printf("|   Customized by            |");
+   disp_FOTA_Printf("|                Alberto96   |");
+   disp_FOTA_Printf("*----------------------------*");
+   disp_FOTA_Printf("|                            |");
+   disp_FOTA_Printf("|    Welcome to BadaDroid    |");
+   disp_FOTA_Printf("|                            |");
+   disp_FOTA_Printf("|       Please wait...       |");
+   disp_FOTA_Printf("|                            |");
    disp_FOTA_Printf("*----------------------------*");
 
    //.... Your code here...
@@ -66,7 +69,7 @@ int main(runMode_t mode)
    } 
    else
    {
-      disp_FOTA_Printf("| Not found a kernel on NAND |");
+      disp_FOTA_Printf("| Kernel not found on NAND   |");
       disp_FOTA_Printf("| Trying to find it on SD    |");
       if ((fd=tfs4_open(kernelImageSD, 4)) >= 0)
 	  {
@@ -76,8 +79,16 @@ int main(runMode_t mode)
 	  }
 	  else
 	  {
-	    disp_FOTA_Printf("| Not found a kernel on SD   |"); 
-        disp_FOTA_Printf("| Failed to boot             |"); 
+	    disp_FOTA_Printf("| Kernel not found           |");
+	    disp_FOTA_Printf("|                 even on SD |");
+		disp_FOTA_Printf("*----------------------------*");
+        disp_FOTA_Printf("|                            |");		
+        disp_FOTA_Printf("|       Failed to boot!      |");
+		disp_FOTA_Printf("|                            |");
+        disp_FOTA_Printf("|  Pull out the battery and  |");
+        disp_FOTA_Printf("| check if zImage is present |");
+		disp_FOTA_Printf("|                            |");
+        disp_FOTA_Printf("*----------------------------*");		
 	  }
    }
 	DisableMmuCache(mmuctrl);
@@ -93,21 +104,24 @@ int main(runMode_t mode)
    if (mode == rm_FOTA_RECOVERY)
    {
       setup_cmdline_tag(cmdlnRM);
-	  disp_FOTA_Printf("| Boot into recovery mode    |");
+	  disp_FOTA_Printf("| Recovery Mode Selected     |");
    }
    else
    {
       setup_cmdline_tag(cmdln);
-	  disp_FOTA_Printf("| Boot into standard mode    |");	  
+	  disp_FOTA_Printf("| Normal Mode Selected       |");	  
    }   
    DRV_Modem_BootingStart();
-   disp_FOTA_Printf("| Init modem                 |");   
+   disp_FOTA_Printf("| Initialized Modem          |");   
    setup_end_tag();
    
    //copy kernel to the right position
    memcpy(&KERNEL_START, &KERNEL_BUF, kernelSize);
-   disp_FOTA_Printf("| Copied kernel to boot      |");
-   disp_FOTA_Printf("| Wait!                      |");
+   disp_FOTA_Printf("| Loaded Kernel in Memory    |");
+   disp_FOTA_Printf("*----------------------------*");
+   disp_FOTA_Printf("|                            |");
+   disp_FOTA_Printf("|          Booting!          |");
+   disp_FOTA_Printf("|                            |");
    disp_FOTA_Printf("*----------------------------*"); 
    
    //SYSCON operations
